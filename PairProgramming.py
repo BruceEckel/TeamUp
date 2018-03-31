@@ -7,8 +7,6 @@
 #      render_template, flash, _app_ctx_stack, send_file, send_from_directory
 # from flask.ext.sqlalchemy import SQLAlchemy
 from pathlib import Path
-import os
-import os.path
 import sys
 import click
 # # configuration
@@ -86,9 +84,7 @@ class Person: #(db.Model):
     def generateNextPairings():
         from RoundRobin import round_robin
         size = len(Person.all)
-        if not size:
-            print("empty database")
-            return [[]]
+        assert size, "empty database"
         groups = round_robin(size)[nextPairingNumber(size)]
         teams = []
         for group in groups:
