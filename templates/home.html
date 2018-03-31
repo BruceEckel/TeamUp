@@ -1,0 +1,72 @@
+<!doctype html>
+{% set title="Atomic Scala CodeMash Precompiler" %}
+<title>{{ title }}</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<div class=page>
+  <h1>{{ title }}</h1>
+  <h4>
+  {% if session.logged_in and session.name_entered %}
+  {{session.name_entered}}
+  {% endif %}
+  {% if not session.logged_in %}
+    <a href="{{ url_for('login') }}">log in (cookies must be on)</a>
+  {% else %}
+    <br><a href="{{ url_for('logout') }}">log out</a>
+  {% endif %}
+  </h4>
+  {% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+      <div class="alert-message block-message error">
+        <a class="close" href="#">×</a>
+        <ul>
+          {%- for msg in errors %}
+          <li>{{ msg }}</li>
+          {% endfor -%}
+        </ul>
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block body %}{% endblock %}
+</div>
+{% if session.logged_in %}
+  <div class=page>
+  {% if not session.name_entered  %}
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+      <dl>
+        First Name:
+        <input type=text size=25 name=first autofocus="autofocus">
+        Last Name:
+        <input type=text size=25 name=last>
+      </dl>
+      <input type=submit>
+      <br/>
+    </form>
+{#  {% else %}
+    <form action="{{ url_for('download') }}" method="get">
+      <input type="hidden" name="platform" value="Book">
+      <input type="submit" value="Download Atomic Scala PDF Book">
+    </form>
+    <form action="{{ url_for('download') }}" method="get">
+      <input type="hidden" name="platform" value="Windows">
+      <input type="submit" value="Download Seminar Software for Windows">
+    </form>
+    <form action="{{ url_for('download') }}" method="get">
+      <input type="hidden" name="platform" value="Mac">
+      <input type="submit" value="Download Seminar Software for Mac">
+    </form>
+    <form action="{{ url_for('download') }}" method="get">
+      <input type="hidden" name="platform" value="Linux">
+      <input type="submit" value="Download Seminar Software for Linux">
+    </form>
+#}
+  {% endif %}
+  </div>
+  {% if session.name_entered %}
+  <div class=page>
+    <form action="{{ url_for('leave_seminar') }}" method="get">
+      <input type="submit" value="Leave Seminar (remove name from list)">
+    </form>
+  </div>
+  {% endif %}
+{% endif %}

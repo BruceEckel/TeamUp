@@ -1,0 +1,33 @@
+{% extends "adminlayout.html" %}
+
+{% macro tableN(tableData, nCols) -%}
+  <table border="1">
+    {%- for row in tableData|batch(nCols) %}
+      <tr>
+      {%- for cell in row %}
+      <td>
+        {% if cell is defined %}
+        <input type="checkbox" name=do_delete value="{{ cell.name }}">
+        {{ cell.name }}
+        {% else %}
+        &nbsp;
+        {% endif %}
+      </td>
+      {%- endfor %}
+      </tr>
+    {%- endfor %}
+  </table>
+{%- endmacro %}
+
+{% block body %}
+  <a href="{{ url_for('generate_pairs') }}"><h2>Generate Pairs</h2></a>
+  <form name="participants" action="{{ url_for('admin_tasks') }}" method="post">
+  <a href="{{ url_for('create_attendee_database') }}"><h2>Regenerate Attendee Database</h2></a>
+  <input type="submit" value="Remove checked names">
+  <ul class=entries>
+  {{ tableN(attendees, 5) }}
+  </ul>
+  </form>
+  <a href="{{ url_for('regenerate_test_database') }}"><h2>Regenerate Small Test Database</h2></a>
+  <a href="{{ url_for('big_database') }}"><h2>Regenerate Big Test Database</h2></a>
+{% endblock %}

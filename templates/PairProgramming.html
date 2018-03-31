@@ -1,0 +1,88 @@
+{% set pause = 5000 %}
+
+{% macro pairingTable(tableNum, title, tableData) -%}
+  <table id="table{{tableNum}}" class="highlight_table" border="1">
+    <tr>
+    <th><font size=+2>{{title}}</font></th>
+    </tr>
+    {%- for row in tableData %}
+      <tr><td>
+        {%- for partner in row %}
+          <font size=+1><b>{{ partner }}</b></font><br/>
+        {%- endfor %}
+      </td></tr>
+    {%- endfor %}
+  </table>
+{%- endmacro %}
+
+{% macro spacer() %}
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+{% endmacro %}
+
+<!doctype html>
+<html>
+<head>
+{% set title="Exercise Pairs" %}
+<title>{{ title }}</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<script src="{{ url_for('static', filename='jquery.js') }}"></script>
+<style>
+#table1 .highlight { background:gold; }
+#table2 .highlight { background:SkyBlue; }
+#table3 .highlight { background:YellowGreen; }
+#table4 .highlight { background:SandyBrown; }
+</style>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+  $('.highlight_table').each(function(){
+    var $TR1=$(this).find('tr:gt(0)'),
+        TRn1=$TR1.length,
+        c1=0;
+    function loop(){
+      $TR1.eq(c1++%TRn1).addClass('highlight').siblings().removeClass('highlight');
+    }
+    setInterval(loop, {{pause}});
+  });
+});
+</script>
+</head>
+<body>
+<center>
+<div>
+  {# {{groups}}
+  {{ pairingTable(1, "Raise One Arm", groups) }} #}
+
+<table align="center">
+<tr>
+<td>
+{{ pairingTable(1, "Raise One Arm", groups[0]) }}
+</td>
+{{spacer()}}
+<td>
+{{ pairingTable(2, "Raise Both Arms", groups[1]) }}
+</td>
+{{spacer()}}
+<td>
+{{ pairingTable(3, "Arms Out to Sides", groups[2]) }}
+</td>
+{{spacer()}}
+<td>
+{{ pairingTable(4, "Hands on Head", groups[3]) }}
+</td>
+</tr>
+<tr>
+  <td><font size=+2><b>Raise One Arm</b></font></td>
+{{spacer()}}
+  <td><font size=+2><b>Raise Both Arms</b></font></td>
+{{spacer()}}
+  <td><font size=+2><b>Arms Out to Sides</b></font></td>
+{{spacer()}}
+  <td><font size=+2><b>Hands on Head</b></font></td>
+</tr>
+</table>
+</center>
+</div>
+</body>
+</html>
