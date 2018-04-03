@@ -96,7 +96,7 @@ class Pairing:
         self.groups = round_robin(len(people.all))[self.pairing_number]
         self.teams = [[people.all[i] for i in group] for group in self.groups]
 
-    def __str__(self):
+    def __repr__(self):
         return f"Pairing {self.pairing_number}:\n{pprint.pformat(self.teams)}"
 
 

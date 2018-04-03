@@ -26,9 +26,11 @@ def test_duplicate_add():
         people.add(Person("bruce eckel"))
         people.add(Person("Bruce eckel"))
 
+
 def test_short_list():
     people = People().add_list(["Bob Dobbs", "Ralph Kramden"])
     assert people.all == ["Bob Dobbs", "Ralph Kramden"]
+
 
 def test_from_file(capsys):
     attendees = People.from_file(Path("Banzai.txt"))
