@@ -6,17 +6,10 @@ John Parker
 John Valuk
 John Emdall
 John Gant
-John Parker
 John Bigboote
-John Bigboote
-John Bigboote
-John Emdall
 John Yaya
 John Smallberries
-John Smallberries
-John Smallberries
 John Barnett
-John Bigboote
 John Camp
 John Careful Walker
 John Chief Crier
@@ -47,12 +40,10 @@ John Ready to Fly
 John Repeat Dance
 John Roberts
 John Scott
-John Smallberries
 John Starbird
 John Take Cover
 John Thorny Stick
 John Two Horns
-John Whorfin
 John Wood
 John Wright
 John Ya Ya

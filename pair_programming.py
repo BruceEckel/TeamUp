@@ -45,6 +45,7 @@ class Person:
         return san(first) + " " + san(last)
 
     def __init__(self, name):
+        assert name.strip(), "Empty 'name'"
         assert " " in name, f"At least first and last name required [{name}]"
         self.name = Person.sanitize(name)
 
@@ -65,7 +66,8 @@ class People:
     def __init__(self):
         self.all = []
 
-    def add(self, person):
+    def add(self, person: Person):
+        assert person not in self.all, f"Duplicate person name: {person}"
         self.all.append(person)
 
     def add_list(self, attendee_list):
@@ -74,6 +76,9 @@ class People:
             if a:
                 self.add(Person(a))
         return self
+
+    def __repr__(self):
+        return pprint.pformat(self.all)
 
     @staticmethod
     def from_file(filepath):
