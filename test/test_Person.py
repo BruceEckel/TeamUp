@@ -3,7 +3,7 @@ from pathlib import Path
 from pprint import pprint
 import sys
 sys.path.append('..')
-from pair_programming import Person, attendees
+from pair_programming import Person, People
 
 # with capsys.disabled():
 
@@ -29,7 +29,7 @@ def test_basic(capsys):
 
 
 def test_group(capsys):
-    [Person(name) for name in Path("Banzai.txt").read_text().splitlines()]
+    attendees = People.from_file("Banzai.txt")
     assert attendees == {
         'Bruce Eckel',
         'Buckaroo Banzai',

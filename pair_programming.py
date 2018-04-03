@@ -5,6 +5,7 @@
 from pathlib import Path
 from collections import deque
 import sys
+import pprint
 import click
 database = Path('SeminarAttendees.txt')
 attendees = Path("Attendees.txt")
@@ -34,9 +35,6 @@ def round_robin(n):
         return list(round_robin_odd(d, n))
 
 
-attendees = set()
-
-
 class Person:
 
     @staticmethod
@@ -47,15 +45,8 @@ class Person:
         return san(first) + " " + san(last)
 
     def __init__(self, name):
-        if name.strip() == "":
-            self.name = None
-            return
-        if " " not in name:
-            print(f"Error: at least first and last name required [{name}]")
-            self.name = None
-            return
+        assert " " in name, f"At least first and last name required [{name}]"
         self.name = Person.sanitize(name)
-        attendees.add(self.name)
 
     def __repr__(self):
         return self.name
@@ -68,7 +59,42 @@ class Person:
             return self.name == other
         return self.name == other.name
 
-# This should be a single Pairing, then just create a list of them.
+
+class People:
+
+    def __init__(self):
+        self.all = []
+
+    def add(self, person):
+        self.all.append(person)
+
+    def add_list(self, attendee_list):
+        for a in attendee_list:
+            a = a.strip()
+            if a:
+                self.add(Person(a))
+        return self
+
+    @staticmethod
+    def from_file(filepath):
+        return People().add_list(filepath.read_text().splitlines())
+
+
+class Pairing:
+    "Captures all information about a single pairing"
+
+    def __init__(self, pairing_number, people: People):
+        assert pairing_number >= 0
+        assert len(people.all) >= 3
+        self.pairing_number = pairing_number
+        self.people = people
+        self.groups = round_robin(len(people.all))[self.pairing_number]
+        self.teams = [[people.all[i] for i in group] for group in self.groups]
+
+    def __str__(self):
+        return f"Pairing {self.pairing_number}:\n{pprint.pformat(self.teams)}"
+
+
 class Pairings:
 
     pairing_number = -1  # Need to init based on existing pairings file
