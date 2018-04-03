@@ -1,0 +1,6 @@
+# Ignore pytest cache files.
+
+.cache/
+.pytest_cache/
+__pycache__/
+tmp.txt
