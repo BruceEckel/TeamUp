@@ -34,6 +34,9 @@ def round_robin(n):
         return list(round_robin_odd(d, n))
 
 
+attendees = set()
+
+
 class Person:
 
     @staticmethod
@@ -48,11 +51,11 @@ class Person:
             self.name = None
             return
         if " " not in name:
-            print(f"Error: at least first and last name required {name}")
+            print(f"Error: at least first and last name required [{name}]")
             self.name = None
             return
         self.name = Person.sanitize(name)
-        Pairings.all.add(self.name)
+        attendees.add(self.name)
 
     def __repr__(self):
         return self.name
@@ -65,34 +68,28 @@ class Person:
             return self.name == other
         return self.name == other.name
 
-
+# This should be a single Pairing, then just create a list of them.
 class Pairings:
 
-    all = set()
     pairing_number = -1  # Need to init based on existing pairings file
 
     @staticmethod
-    def showAll():
-        for p in Pairings.all:
-            print(p)
-
-    @staticmethod
     def nextPairingNumber():
-        assert len(Pairings.all), "Database empty"
+        assert len(attendees), "Database empty"
         index = Pairings.pairing_number + 1
-        if index > 0 and index % len(Pairings.all) == 0:
+        if index > 0 and index % len(attendees) == 0:
             index = 0
         Pairings.pairing_number = index
         return index
 
     @staticmethod
     def generateNextPairings():
-        size = len(Pairings.all)
+        size = len(attendees)
         assert size, "empty database"
         groups = round_robin(size)[Pairings.nextPairingNumber()]
         teams = []
         for group in groups:
-            teams.append([Pairings.all[i] for i in group])
+            teams.append([attendees[i] for i in group])
         return teams
 
     @staticmethod

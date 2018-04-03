@@ -3,18 +3,19 @@ from pathlib import Path
 from pprint import pprint
 import sys
 sys.path.append('..')
-from pair_programming import Person, Pairings
+from pair_programming import Person, attendees
 
+# with capsys.disabled():
 
 def test_empty(capsys):
     Person("")
     Person(" ")
-    with capsys.disabled():
-        pprint(Pairings.all)
+    assert attendees == set()
 
 
 def test_single_name(capsys):
-    Person("Bob")  # How do we capture the error message for this????
+    Person("Bob")
+    assert capsys.readouterr().out == "Error: at least first and last name required [Bob]\n"
 
 
 def test_basic(capsys):
@@ -24,12 +25,12 @@ def test_basic(capsys):
     assert Person("bruce eckel") == "Bruce Eckel"
     assert Person("Bruce eckel") == "Bruce Eckel"
     assert Person("bruce Eckel") == "Bruce Eckel"
-    assert Pairings.all == {'Bruce Eckel'}
+    assert attendees == {'Bruce Eckel'}
 
 
 def test_group(capsys):
     [Person(name) for name in Path("Banzai.txt").read_text().splitlines()]
-    assert Pairings.all == {
+    assert attendees == {
         'Bruce Eckel',
         'Buckaroo Banzai',
         'Emilio Lizardo',
