@@ -36,38 +36,63 @@ def round_robin(n):
 
 class Person:
 
-    all = []
-    pairing_number = -1  # Need to init based on existing pairings file
+    @staticmethod
+    def sanitize(unclean):
+        def san(nm):
+            return " ".join([part.strip().capitalize().replace(",", "") for part in nm.split()])
+        first, last = unclean.rsplit(" ", 1)
+        return san(first) + " " + san(last)
 
     def __init__(self, name):
-        self.name = name
-        Person.all.append(name)
+        if name.strip() == "":
+            self.name = None
+            return
+        if " " not in name:
+            print(f"Error: at least first and last name required {name}")
+            self.name = None
+            return
+        self.name = Person.sanitize(name)
+        Pairings.all.add(self.name)
 
     def __repr__(self):
         return self.name
 
+    def __lt__(self, other):
+        return self.name < other.name
+
+    def __eq__(self, other):
+        if isinstance(other, str):
+            return self.name == other
+        return self.name == other.name
+
+
+class Pairings:
+
+    all = set()
+    pairing_number = -1  # Need to init based on existing pairings file
+
     @staticmethod
     def showAll():
-        for p in Person.all:
+        for p in Pairings.all:
             print(p)
 
     @staticmethod
     def nextPairingNumber():
-        assert len(Person.all), "Database empty"
-        index = Person.pairing_number + 1
-        if index > 0 and index % len(Person.all) == 0:
+        assert len(Pairings.all), "Database empty"
+        index = Pairings.pairing_number + 1
+        if index > 0 and index % len(Pairings.all) == 0:
             index = 0
-        Person.pairing_number = index
+        Pairings.pairing_number = index
         return index
 
     @staticmethod
     def generateNextPairings():
-        size = len(Person.all)
+        size = len(Pairings.all)
         assert size, "empty database"
-        groups = round_robin(size)[Person.nextPairingNumber()]
+        groups = round_robin(size)[Pairings.nextPairingNumber()]
         teams = []
         for group in groups:
-            teams.append([Person.all[i] for i in group])
+            teams.append([Pairings.all[i] for i in group])
         return teams
 
     @staticmethod
@@ -81,7 +106,7 @@ class Person:
                 result.append(seq[int(last):int(last + avg)])
                 last += avg
             return result
-        return divideList(Person.generateNextPairings(), 4)
+        return divideList(Pairings.generateNextPairings(), 4)
 
 
 @click.group()
@@ -104,12 +129,6 @@ def create_attendee_database():
 @cli.command("genNewDB")
 def generate_new_database(nameList):
     "Create new database"
-
-    def sanitize(unclean):
-        def san(nm):
-            return " ".join([part.strip().capitalize().replace(",", "") for part in nm.split()])
-        first, last = unclean.rsplit(" ", 1)
-        return san(first) + " " + san(last)
 
     if database.exists():
         database.unlink()
