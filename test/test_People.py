@@ -71,7 +71,7 @@ def test_from_file(capsys):
         "John Mud Head",
         "John Nephew",
         "John Nolan",
-        "John O'connor",
+        "John O'Connor",
         "John Omar",
         "John Parrot",
         "John Rajeesh",

@@ -40,7 +40,7 @@ class Person:
     @staticmethod
     def sanitize(unclean):
         def san(nm):
-            return " ".join([part.strip().capitalize().replace(",", "") for part in nm.split()])
+            return " ".join([part.strip().title().replace(",", "") for part in nm.split()])
         first, last = unclean.rsplit(" ", 1)
         return san(first) + " " + san(last)
 
@@ -50,7 +50,7 @@ class Person:
         self.name = Person.sanitize(name)
 
     def __repr__(self):
-        return self.name
+        return '"' + self.name + '"'
 
     def __lt__(self, other):
         return self.name < other.name
@@ -65,6 +65,12 @@ class People:
 
     def __init__(self):
         self.all = []
+
+    def __len__(self):
+        return len(self.all)
+
+    def __getitem__(self, key):
+        return self.all[key]
 
     def add(self, person: Person):
         assert person not in self.all, f"Duplicate person name: {person}"
@@ -93,11 +99,14 @@ class Pairing:
         assert len(people.all) >= 3
         self.pairing_number = pairing_number
         self.people = people
-        self.groups = round_robin(len(people.all))[self.pairing_number]
-        self.teams = [[people.all[i] for i in group] for group in self.groups]
+        self.groups = round_robin(len(people))[self.pairing_number]
+        self.teams = [[people[i] for i in group] for group in self.groups]
+
+    def __str__(self):
+        return f"Pairing {self.pairing_number}:\n{pprint.pformat(self.teams)}"
 
     def __repr__(self):
-        return f"Pairing {self.pairing_number}:\n{pprint.pformat(self.teams)}"
+        return f"{pprint.pformat(self.teams)}"
 
 
 class Pairings:
