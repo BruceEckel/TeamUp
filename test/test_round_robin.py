@@ -2,7 +2,7 @@ import pytest
 from pprint import pprint
 import sys
 sys.path.append('..')
-from pair_programming import round_robin
+from pairings import round_robin
 
 
 def test_round_robin_zero():

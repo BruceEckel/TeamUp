@@ -1,9 +1,9 @@
-import pytest
 from pathlib import Path
 import pprint
 import sys
+import pytest
 sys.path.append('..')
-from pair_programming import Person, People, Pairing
+from pairings import Person, People, Pairing
 
 
 def display(capsys, item):
@@ -48,8 +48,7 @@ def test_pairing_upper_bound(capsys):
         pn = Pairing(n, attendees)
         display(capsys, pn)
     with pytest.raises(AssertionError):
-        pairing_plus_one = Pairing(
-            pairing_3.pairing_number_bound + 1, attendees)
+        Pairing(pairing_3.pairing_number_bound + 1, attendees)
 
 
 def test_single_pairing(capsys):
@@ -91,11 +90,11 @@ def test_pairing_duplicates(capsys):
     Path("test_pairing_all.txt").write_text(pprint.pformat(flat))
     dups = []
     while flat:
-        next = flat.pop()
-        if len(next) == 3:
+        next_pair = flat.pop()
+        if len(next_pair) == 3:
             continue
         for pair in flat:
-            if next[0] in pair and next[1] in pair and len(pair) < 3:
-                dups.append(f"{next}, {pair}\n")
+            if next_pair[0] in pair and next_pair[1] in pair and len(pair) < 3:
+                dups.append(f"{next_pair}, {pair}\n")
     assert not dups, f"duplicates: {pprint.pformat(dups)}"
 

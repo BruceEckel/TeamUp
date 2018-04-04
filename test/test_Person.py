@@ -1,9 +1,7 @@
-import pytest
-from pathlib import Path
-from pprint import pprint
 import sys
+import pytest
 sys.path.append('..')
-from pair_programming import Person, People
+from pairings import Person, People
 
 # with capsys.disabled():
 

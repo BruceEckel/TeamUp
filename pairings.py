@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-    Produces & Displays Pair Programming pairs
+    Pairs people for group activities
 """
-from pathlib import Path
 from collections import deque
-import sys
+import random
 import pprint
-import click
-database = Path('SeminarAttendees.txt')
-attendees = Path("Attendees.txt")
 
 
 def round_robin_even(d, n):
@@ -122,67 +118,58 @@ class Pairing:
 
 class Pairings:
 
-    pairing_number = -1  # Need to init based on existing pairings file
+    def __init__(self, people: People, seed=47):
+        assert len(
+            people) >= 3, f"Number of people must be >= 3: Number is {len(people)}"
+        self.bound = Pairing(0, people).pairing_number_bound
+        self.all = [Pairing(n, people) for n in range(self.bound)]
+        random.seed(seed)
+        self.sequence = random.sample(list(range(self.bound)), self.bound)
+
+    def __getitem__(self, n):
+        assert isinstance(n, int)
+        assert n >= 0 and n < self.bound
+        return self.all[self.sequence[n]]
 
     @staticmethod
-    def nextPairingNumber():
-        assert len(attendees), "Database empty"
-        index = Pairings.pairing_number + 1
-        if index > 0 and index % len(attendees) == 0:
-            index = 0
-        Pairings.pairing_number = index
-        return index
+    def from_list(lst):
+        return Pairings(People().add_list(lst))
 
     @staticmethod
-    def generateNextPairings():
-        size = len(attendees)
-        assert size, "empty database"
-        groups = round_robin(size)[Pairings.nextPairingNumber()]
-        teams = []
-        for group in groups:
-            teams.append([attendees[i] for i in group])
-        return teams
+    def from_file(filepath):
+        return Pairings(People.from_file(filepath))
+
+    # pairing_number = -1  # Need to init based on existing pairings file
+
+    # @staticmethod
+    # def nextPairingNumber():
+    #     index = Pairings.pairing_number + 1
+    #     if index > 0 and index % len(attendees) == 0:
+    #         index = 0
+    #     Pairings.pairing_number = index
+    #     return index
+
+    # @staticmethod
+    # def generateNextPairings():
+    #     size = len(attendees)
+    #     assert size, "empty database"
+    #     groups = round_robin(size)[Pairings.nextPairingNumber()]
+    #     teams = []
+    #     for group in groups:
+    #         teams.append([attendees[i] for i in group])
+    #     return teams
+
+    @staticmethod
+    def divideList(seq, num):
+        avg = len(seq) / float(num)  # Need to test this for Python 3
+        result = []
+        last = 0.0
+        while last < len(seq):
+            result.append(seq[int(last):int(last + avg)])
+            last += avg
+        return result
 
     @staticmethod
     def generate_pairs():
         "Generate new pairs"
-        def divideList(seq, num):
-            avg = len(seq) / float(num)
-            result = []
-            last = 0.0
-            while last < len(seq):
-                result.append(seq[int(last):int(last + avg)])
-                last += avg
-            return result
-        return divideList(Pairings.generateNextPairings(), 4)
-
-
-@click.group()
-@click.version_option()
-def cli():
-    """Pair Programming
-
-    Generates and displays pair-programming teams using a round-robin algorithm.
-    """
-
-
-@cli.command()
-def create_attendee_database():
-    if not attendees.exists():
-        print("Attendees.txt not found")
-        sys.exit(1)
-    return generate_new_database(attendees.read_text().splitlines())
-
-
-@cli.command("genNewDB")
-def generate_new_database(nameList):
-    "Create new database"
-
-    if database.exists():
-        database.unlink()
-    # Eliminate duplicate sanitized names
-    return [Person(nm) for nm in {sanitize(nm) for nm in nameList}]
-
-
-if __name__ == '__main__':
-    cli()
+        # return Pairings.divideList(Pairings.generateNextPairings(), 4)
