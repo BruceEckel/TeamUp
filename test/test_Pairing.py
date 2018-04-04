@@ -16,10 +16,26 @@ def test_small(capsys):
     ]
 
 
-def _test_pairing_upper_bound(capsys):
+def test_pairing_upper_bound(capsys):
     attendees = People().add_list(
         ["Emilio Lizardo", "Penny Priddy", "John Whorfin", "John Parker"])
+    with pytest.raises(AssertionError):
+        pairing_3 = Pairing(3, attendees)
+    attendees.add(Person("Buckaroo Banzai"))
     pairing_3 = Pairing(3, attendees)
+    assert pairing_3 == [
+        ["John Whorfin", "Penny Priddy"],
+        ["John Parker", "Emilio Lizardo", "Buckaroo Banzai"]
+    ]
+    with capsys.disabled():
+        print("pairing_3.pairing_number_bound", pairing_3.pairing_number_bound)
+    for n in range(pairing_3.pairing_number_bound):
+        pn = Pairing(n, attendees)
+        with capsys.disabled():
+            print(pn)
+    with pytest.raises(AssertionError):
+        pairing_plus_one = Pairing(
+            pairing_3.pairing_number_bound + 1, attendees)
 
 
 def test_single_pairing(capsys):
