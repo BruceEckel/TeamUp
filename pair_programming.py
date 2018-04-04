@@ -116,6 +116,9 @@ class Pairing:
             return self.teams == other
         return False
 
+    def __iter__(self):
+        return iter(self.teams)
+
 
 class Pairings:
 

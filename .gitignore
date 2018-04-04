@@ -34,3 +34,4 @@ nbproject/
 # Ignore OS metadata files.
 
 .DS_Store
+test/test_pairing_all.txt

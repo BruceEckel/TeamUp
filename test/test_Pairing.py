@@ -1,16 +1,32 @@
 import pytest
 from pathlib import Path
-from pprint import pprint
+import pprint
 import sys
 sys.path.append('..')
 from pair_programming import Person, People, Pairing
 
 
+def display(capsys, item):
+    "Show item on stdout"
+    # with capsys.disabled():
+    #     print(item)
+
+
 def test_small(capsys):
     attendees = People().add_list(
         ["Emilio Lizardo", "Penny Priddy", "John Whorfin", "John Parker"])
-    pairing_2 = Pairing(2, attendees)
-    assert pairing_2 == [
+    p = Pairing(0, attendees)
+    assert p.pairing_number_bound == 3
+    every = [Pairing(n, attendees) for n in range(p.pairing_number_bound)]
+    assert every[0] == [
+        ["Emilio Lizardo", "John Parker"],
+        ["Penny Priddy", "John Whorfin"]
+    ]
+    assert every[1] == [
+        ["Emilio Lizardo", "John Whorfin"],
+        ["John Parker", "Penny Priddy"]
+    ]
+    assert every[2] == [
         ["Emilio Lizardo", "Penny Priddy"],
         ["John Whorfin", "John Parker"]
     ]
@@ -27,12 +43,10 @@ def test_pairing_upper_bound(capsys):
         ["John Whorfin", "Penny Priddy"],
         ["John Parker", "Emilio Lizardo", "Buckaroo Banzai"]
     ]
-    with capsys.disabled():
-        print("pairing_3.pairing_number_bound", pairing_3.pairing_number_bound)
+    display(capsys, f"pairing_3.pairing_number_bound {pairing_3.pairing_number_bound}")
     for n in range(pairing_3.pairing_number_bound):
         pn = Pairing(n, attendees)
-        with capsys.disabled():
-            print(pn)
+        display(capsys, pn)
     with pytest.raises(AssertionError):
         pairing_plus_one = Pairing(
             pairing_3.pairing_number_bound + 1, attendees)
@@ -41,29 +55,47 @@ def test_pairing_upper_bound(capsys):
 def test_single_pairing(capsys):
     attendees = People.from_file(Path("Banzai.txt"))
     pairing_7 = Pairing(7, attendees)
+    display(capsys, pairing_7)
     assert pairing_7 == [
-        ["John Starbird", "John Scott"],
-        ["John Take Cover", "John Roberts"],
-        ["John Thorny Stick", "John Repeat Dance"],
-        ["John Two Horns", "John Ready To Fly"],
-        ["John Wood", "John Rajeesh"],
-        ["John Wright", "John Parrot"],
-        ["John Ya Ya", "John Omar"],
-        ["Buckaroo Banzai", "John O'Connor"],
-        ["Emilio Lizardo", "John Nolan"],
-        ["Penny Priddy", "John Nephew"],
-        ["John Whorfin", "John Mud Head"],
-        ["John Parker", "John Milton"],
-        ["John Valuk", "John Many Jars"],
-        ["John Emdall", "John Littlejohn"],
-        ["John Gant", "John Lee"],
-        ["John Bigboote", "John Kim Chi"],
-        ["John Yaya", "John Joseph"],
-        ["John Smallberries", "John Jones"],
-        ["John Barnett", "John Icicle Boy"],
-        ["John Camp", "John Guardian"],
-        ["John Careful Walker", "John Grim"],
-        ["John Chief Crier", "John Gomez"],
-        ["John Cooper", "John Fledgling"],
-        ["John Coyote", "John Fish", "John Edwards"]
+        ["John Two Horns", "John Thorny Stick"],
+        ["John Valuk", "John Take Cover"],
+        ["John Whorfin", "John Starbird"],
+        ["John Wood", "John Smallberries"],
+        ["John Wright", "John Scott"],
+        ["John Ya Ya", "John Roberts"],
+        ["Penny Priddy", "John Repeat Dance"],
+        ["Buckaroo Banzai", "John Ready To Fly"],
+        ["Emilio Lizardo", "John Rajeesh"],
+        ["John Barnett", "John Parrot"],
+        ["John Bigboote", "John Parker"],
+        ["John Camp", "John Omar"],
+        ["John Careful Walker", "John O'Connor"],
+        ["John Chief Crier", "John Nolan"],
+        ["John Cooper", "John Nephew"],
+        ["John Coyote", "John Mud Head"],
+        ["John Edwards", "John Milton"],
+        ["John Emdall", "John Many Jars"],
+        ["John Fish", "John Littlejohn"],
+        ["John Fledgling", "John Lee"],
+        ["John Gant", "John Kim Chi"],
+        ["John Gomez", "John Joseph"],
+        ["John Grim", "John Icicle Boy", "John Guardian"]
     ]
+
+
+def test_pairing_duplicates(capsys):
+    attendees = People.from_file(Path("Banzai.txt"))
+    p = Pairing(0, attendees)
+    every = [Pairing(n, attendees) for n in range(p.pairing_number_bound)]
+    flat = [pair for each in every for pair in each]
+    Path("test_pairing_all.txt").write_text(pprint.pformat(flat))
+    dups = []
+    while flat:
+        next = flat.pop()
+        if len(next) == 3:
+            continue
+        for pair in flat:
+            if next[0] in pair and next[1] in pair and len(pair) < 3:
+                dups.append(f"{next}, {pair}\n")
+    assert not dups, f"duplicates: {pprint.pformat(dups)}"
+
