@@ -108,6 +108,11 @@ class Pairing:
     def __repr__(self):
         return f"{pprint.pformat(self.teams)}"
 
+    def __eq__(self, other):
+        if isinstance(other, list):
+            return self.teams == other
+        return False
+
 
 class Pairings:
 

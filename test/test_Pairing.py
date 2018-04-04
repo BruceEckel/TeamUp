@@ -10,23 +10,22 @@ def test_small(capsys):
     attendees = People().add_list(
         ["Emilio Lizardo", "Penny Priddy", "John Whorfin", "John Parker"])
     pairing_2 = Pairing(2, attendees)
-    with capsys.disabled():
-        print(f"\n{pairing_2}")
-        print(repr(pairing_2))
-        print(pairing_2 == [["Emilio Lizardo", "Penny Priddy"], ["John Whorfin", "John Parker"]])
+    assert pairing_2 == [
+        ["Emilio Lizardo", "Penny Priddy"],
+        ["John Whorfin", "John Parker"]
+    ]
+
 
 def _test_pairing_upper_bound(capsys):
     attendees = People().add_list(
         ["Emilio Lizardo", "Penny Priddy", "John Whorfin", "John Parker"])
     pairing_3 = Pairing(3, attendees)
 
-def _test_single_pairing(capsys):
+
+def test_single_pairing(capsys):
     attendees = People.from_file(Path("Banzai.txt"))
     pairing_7 = Pairing(7, attendees)
-    with capsys.disabled():
-        print(f"\n{pairing_7}")
-        print(repr(pairing_7))
-    assert repr(pairing_7) == [
+    assert pairing_7 == [
         ["John Starbird", "John Scott"],
         ["John Take Cover", "John Roberts"],
         ["John Thorny Stick", "John Repeat Dance"],
