@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Pairs people for group activities
+    Combine people for group activities
 """
 from pathlib import Path
 import sys

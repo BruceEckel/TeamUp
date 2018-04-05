@@ -119,8 +119,7 @@ class Pairing:
 class Pairings:
 
     def __init__(self, people: People, seed=47):
-        assert len(
-            people) >= 3, f"Number of people must be >= 3: Number is {len(people)}"
+        assert len(people) >= 3, f"Number of people must be >= 3; Is {len(people)}"
         self.bound = Pairing(0, people).pairing_number_bound
         self.all = [Pairing(n, people) for n in range(self.bound)]
         random.seed(seed)
@@ -173,3 +172,29 @@ class Pairings:
     def generate_pairs():
         "Generate new pairs"
         # return Pairings.divideList(Pairings.generateNextPairings(), 4)
+
+
+class PersistentLoopCounter:
+    """
+    Counts from zero to bound -1, then restarts at zero.
+    Stores the current count in a text file. When it starts,
+    it looks for that file and reads it as the current count
+    if it exists, and initializes a new zeroed file if it doesn't
+    exist.
+    """
+    def __init__(self, file_name_stem, bound):
+        self.file_path = Path(file_name_stem + "_count.txt")
+        self.bound = bound
+        if self.file_path.exists():
+            self.count = eval(self.file_path.read_text().strip())
+        else:
+            self.count = 0
+
+    def next(self):
+        result = self.count
+        if self.count > 0 and self.count % self.bound == 0:
+            self.count = 0
+        else:
+            self.count += 1
+        self.file_path.write_text(f"{self.count}")
+        return result
