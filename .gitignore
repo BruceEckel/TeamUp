@@ -15,7 +15,7 @@ dist/
 
 # Ignore virtualenv environments.
 
-venv*/
+virtualenv*/
 
 
 # Ignore Vagrant runtime files.
@@ -35,3 +35,4 @@ nbproject/
 
 .DS_Store
 test/test_pairing_all.txt
+*.json

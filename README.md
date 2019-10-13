@@ -1,3 +1,5 @@
+Run venv.bat from Git/tools to set up and/or enter virtualenv, then pip install pytest
+
 # Description of how it will eventually work
 
 ## When you start the program, it:

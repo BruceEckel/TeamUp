@@ -14,6 +14,7 @@ def test_small(capsys):
     pairings = Pairings.from_list(
         ["Emilio Lizardo", "Penny Priddy", "John Whorfin", "John Parker"])
     assert pairings.bound == 3
+    assert len(pairings) == 3
     assert pairings.all[0] == [
         ["Emilio Lizardo", "John Parker"],
         ["Penny Priddy", "John Whorfin"]
@@ -38,11 +39,13 @@ def test_small(capsys):
         ["Emilio Lizardo", "Penny Priddy"],
         ["John Whorfin", "John Parker"]
     ]
+    assert pairings.json() == ""
 
 
 def test_single_pairing(capsys):
     pairings = Pairings.from_file(Path("Banzai.txt"))
     assert pairings.bound == 47
+    assert len(pairings) == 47
     assert pairings[7] == [
         ["John Rajeesh", "John Parrot"],
         ["John Ready To Fly", "John Parker"],

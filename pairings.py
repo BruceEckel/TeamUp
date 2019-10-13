@@ -4,6 +4,7 @@
 """
 from collections import deque
 import random
+import json
 import pprint
 
 
@@ -60,7 +61,7 @@ class Person:
 class People:
 
     def __init__(self):
-        self.all = []
+        self.all : List[Person] = []
 
     def __len__(self):
         return len(self.all)
@@ -88,9 +89,12 @@ class People:
 
 
 class Pairing:
-    "Captures all information about a single pairing"
+    """
+    Captures all information about a single pairing (that is, a variation
+    of all the combined teams). You use one pairing to produce one session.
+    """
 
-    def __init__(self, pairing_number, people: People):
+    def __init__(self, pairing_number: int, people: People):
         assert pairing_number >= 0
         assert len(people) >= 3
         rr = round_robin(len(people))
@@ -116,7 +120,20 @@ class Pairing:
         return iter(self.teams)
 
 
+class PairingEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Pairing):
+            return obj.teams
+        # Base class default() raises TypeError:
+        return json.JSONEncoder.default(self, obj)
+
+
 class Pairings:
+    """
+    All possible combinations of groups (every round-robin possibility).
+    Typical usage of this library is:
+    pairings = Pairings.from_file(filepath)
+    """
 
     def __init__(self, people: People, seed=47):
         assert len(people) >= 3, f"Number of people must be >= 3; Is {len(people)}"
@@ -129,6 +146,11 @@ class Pairings:
         assert isinstance(n, int)
         assert n >= 0 and n < self.bound
         return self.all[self.sequence[n]]
+
+    def  __len__(self): return self.bound
+
+    def json(self):
+        return json.dumps([self.all[n] for n in self.sequence])
 
     @staticmethod
     def from_list(lst):
