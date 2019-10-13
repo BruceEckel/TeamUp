@@ -2,10 +2,11 @@
 """
     Pairs people for group activities
 """
-from collections import deque
 import random
 import json
 import pprint
+from collections import deque
+from pathlib import Path
 
 
 def round_robin_even(d, n):
@@ -218,15 +219,26 @@ class PersistentLoopCounter:
         self.file_path = Path(file_name_stem + "_count.txt")
         self.bound = bound
         if self.file_path.exists():
-            self.count = eval(self.file_path.read_text().strip())
+            self.__count = eval(self.file_path.read_text().strip())
         else:
-            self.count = 0
+            self.__count = 0
+            self.file_path.write_text(f"{self.__count}")
+        assert self.__count >= 0
+
+    def count(self):
+        return self.__count
 
     def next(self):
-        result = self.count
-        if self.count > 0 and self.count % self.bound == 0:
-            self.count = 0
+        if self.__count == self.bound - 1:
+            self.__count = 0
         else:
-            self.count += 1
-        self.file_path.write_text(f"{self.count}")
-        return result
+            self.__count += 1
+        assert self.__count >= 0
+        self.file_path.write_text(f"{self.__count}")
+        return self.__count
+
+    @staticmethod
+    def delete(file_name_stem):
+        counter_file = Path(file_name_stem + "_count.txt")
+        if counter_file.exists():
+            counter_file.unlink()
