@@ -41,40 +41,6 @@ def test_small(capsys):
     ]
     print(pairings.json())
 
-    """[
-   [
-     [
-       "Emilio Lizardo",
-       "John Whorfin"
-     ],
-     [
-       "John Parker",
-       "Penny Priddy"
-     ]
-   ],
-   [
-     [
-       "Emilio Lizardo",
-       "John Parker"
-     ],
-     [
-       "Penny Priddy",
-       "John Whorfin"
-     ]
-   ],
-   [
-     [
-       "Emilio Lizardo",
-       "Penny Priddy"
-     ],
-     [
-       "John Whorfin",
-       "John Parker"
-     ]
-   ]
- ]"""
-
-
 def test_single_pairing(capsys):
     pairings = Pairings.from_file(Path("Banzai.txt"))
     assert pairings.bound == 47
