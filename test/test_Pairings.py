@@ -39,7 +39,40 @@ def test_small(capsys):
         ["Emilio Lizardo", "Penny Priddy"],
         ["John Whorfin", "John Parker"]
     ]
-    assert pairings.json() == ""
+    print(pairings.json())
+
+    """[
+   [
+     [
+       "Emilio Lizardo",
+       "John Whorfin"
+     ],
+     [
+       "John Parker",
+       "Penny Priddy"
+     ]
+   ],
+   [
+     [
+       "Emilio Lizardo",
+       "John Parker"
+     ],
+     [
+       "Penny Priddy",
+       "John Whorfin"
+     ]
+   ],
+   [
+     [
+       "Emilio Lizardo",
+       "Penny Priddy"
+     ],
+     [
+       "John Whorfin",
+       "John Parker"
+     ]
+   ]
+ ]"""
 
 
 def test_single_pairing(capsys):

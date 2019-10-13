@@ -58,6 +58,14 @@ class Person:
         return self.name == other.name
 
 
+class PersonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Person):
+            return obj.name
+        # Base class default() raises TypeError:
+        return json.JSONEncoder.default(self, obj)
+
+
 class People:
 
     def __init__(self):
@@ -124,6 +132,8 @@ class PairingEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Pairing):
             return obj.teams
+        if isinstance(obj, Person):
+            return obj.name
         # Base class default() raises TypeError:
         return json.JSONEncoder.default(self, obj)
 
@@ -150,7 +160,7 @@ class Pairings:
     def  __len__(self): return self.bound
 
     def json(self):
-        return json.dumps([self.all[n] for n in self.sequence])
+        return json.dumps([self.all[n] for n in self.sequence], cls=PairingEncoder, indent=2)
 
     @staticmethod
     def from_list(lst):
