@@ -1,7 +1,8 @@
 import sys
 import pytest
 sys.path.append('..')
-from pairings import Person, People
+from Person import Person
+from pairings import People
 
 # with capsys.disabled():
 
