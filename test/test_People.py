@@ -2,7 +2,8 @@ from pathlib import Path
 import sys
 import pytest
 sys.path.append('..')
-from pairings import Person, People
+from Person import Person
+from People import People
 
 
 def test_single_add(capsys):

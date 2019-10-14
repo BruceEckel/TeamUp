@@ -3,7 +3,9 @@ import pprint
 import sys
 import pytest
 sys.path.append('..')
-from pairings import Person, People, Pairing
+from Person import Person
+from People import People
+from Pairing import Pairing
 
 
 def display(capsys, item):
