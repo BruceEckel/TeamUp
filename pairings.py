@@ -4,11 +4,7 @@
 """
 import random
 import json
-import pprint
-from collections import deque
 from pathlib import Path
-from round_robin import round_robin
-from Person import Person
 from People import People
 from Pairing import Pairing, PairingEncoder
 from display_page import html_page
