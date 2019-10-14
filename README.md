@@ -1,16 +1,16 @@
-Run venv.bat from Git/tools to set up and/or enter virtualenv, then pip install pytest
 
-# Description of how it will eventually work
+# TeamUp
 
-## When you start the program, it:
-* Opens to the last generated pairing and shows the date and time that pairing was generated.
-  - If no `pairings.txt` exists, creates the file and generates and stores the initial pairing.
-* Allows you to move forward and backward through pairings. Moving forward generates a new pairing if one
-  doesn't exist.
-* Once a new pairing is created, you can't create another new one for 5 minutes unless you override.
-* People can be temporarily commented out of the source list when making a pairing, and they will not
-  be included in that pairing.
-* Pairing sequences are repeatable. That is, if you erase `pairings.txt`, you'll produce the same
-  pairings in the same order.
-* The pairings are displayed in a grid and the color bar moves to highlight each pair after a specified
-  number of seconds.
+> A tool for pairing people during a workshop or seminar, so everyone eventually works with everyone.
+
+## Install
+
+1. Clone this project or download and unpack the zip file.
+2. Run `python setup.py install`
+3. `teamup` should now run from any directory
+4. You need an `Attendees.txt` file with one name per line in the directory where you run `teamup`.
+5. If you want to run the tests:
+   A. Run `venv.bat` from https://github.com/BruceEckel/tools to set up and/or enter virtualenv.
+   B. `pip install pytest`
+   C. Move to the `tests` directory
+   D. Run `pytest` and everything should complete successfully
