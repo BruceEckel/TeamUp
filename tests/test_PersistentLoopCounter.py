@@ -3,36 +3,35 @@ import pytest
 from pathlib import Path
 from teamup.PersistentLoopCounter import PersistentLoopCounter
 
-base = "LoopCounter"
-counter_path = Path(base + "_count.txt")
+counter_path = Path()
 bound = 10
 
 
 def test_create(capsys):
-    PersistentLoopCounter.delete(base)
-    assert counter_path.exists() == False
-    plc = PersistentLoopCounter(base, bound)
-    assert counter_path.exists() == True
-    assert plc.count() == 0
+    PersistentLoopCounter.delete(counter_path)
+    assert not PersistentLoopCounter.exists(counter_path)
+    plc = PersistentLoopCounter.create(counter_path, bound)
+    assert PersistentLoopCounter.exists(counter_path)
+    assert plc.index() == 0
 
 
 def test_next(capsys):
-    plc = PersistentLoopCounter(base, bound)
-    assert plc.count() == 0
+    plc = PersistentLoopCounter.get(counter_path)
+    assert plc.index() == 0
     assert plc.next() == 1
-    assert plc.count() == 1
+    assert plc.index() == 1
 
 
 def test_bound(capsys):
-    plc = PersistentLoopCounter(base, bound)
-    sequence = [(plc.count(), plc.next()) for i in range(0, bound + 1)]
+    plc = PersistentLoopCounter.get(counter_path)
+    sequence = [(plc.index(), plc.next()) for i in range(0, bound + 1)]
     assert sequence == [
         (1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 0), (0, 1), (1, 2)
     ]
 
 
 def test_delete(capsys):
-    assert counter_path.exists()
-    PersistentLoopCounter.delete(base)
-    assert not counter_path.exists()
+    assert PersistentLoopCounter.exists(counter_path)
+    PersistentLoopCounter.delete(counter_path)
+    assert not PersistentLoopCounter.exists(counter_path)
 
