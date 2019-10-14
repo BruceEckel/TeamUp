@@ -7,30 +7,8 @@ import json
 import pprint
 from collections import deque
 from pathlib import Path
-
-
-def round_robin_even(d, n):
-    for i in range(n - 1):
-        yield [[d[j], d[-j-1]] for j in range(n//2)]
-        d[0], d[-1] = d[-1], d[0]
-        d.rotate()
-
-
-def round_robin_odd(d, n):
-    for i in range(n):
-        h = [[d[j], d[-j-1]] for j in range(n//2)]
-        h[-1].append(d[n//2])
-        yield h
-        d.rotate()
-
-
-def round_robin(n):
-    assert n > 1
-    d = deque(range(n))
-    if n % 2 == 0:
-        return list(round_robin_even(d, n))
-    else:
-        return list(round_robin_odd(d, n))
+from round_robin import round_robin
+from display_page import html_page
 
 
 class Person:
@@ -57,14 +35,6 @@ class Person:
         if isinstance(other, str):
             return self.name == other
         return self.name == other.name
-
-
-class PersonEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Person):
-            return obj.name
-        # Base class default() raises TypeError:
-        return json.JSONEncoder.default(self, obj)
 
 
 class People:
@@ -171,25 +141,15 @@ class Pairings:
     def from_file(filepath):
         return Pairings(People.from_file(filepath))
 
-    # pairing_number = -1  # Need to init based on existing pairings file
-
-    # @staticmethod
-    # def nextPairingNumber():
-    #     index = Pairings.pairing_number + 1
-    #     if index > 0 and index % len(attendees) == 0:
-    #         index = 0
-    #     Pairings.pairing_number = index
-    #     return index
-
-    # @staticmethod
-    # def generateNextPairings():
-    #     size = len(attendees)
-    #     assert size, "empty database"
-    #     groups = round_robin(size)[Pairings.nextPairingNumber()]
-    #     teams = []
-    #     for group in groups:
-    #         teams.append([attendees[i] for i in group])
-    #     return teams
+    def create_html_files(self):
+        build = Path() / "build"
+        if not build.exists():
+            build.mkdir()
+        for n, pairing in enumerate([self.all[n] for n in self.sequence]):
+            html_file = build / (f"pairing{n}.html")
+            print(html_file)
+            # Strip outer brackets of array to fit in Javascript Array() constructor:
+            html_file.write_text(html_page % (('%s' % pairing.teams)[1:-1], len(pairing.teams)))
 
     @staticmethod
     def divideList(seq, num):
@@ -201,44 +161,3 @@ class Pairings:
             last += avg
         return result
 
-    @staticmethod
-    def generate_pairs():
-        "Generate new pairs"
-        # return Pairings.divideList(Pairings.generateNextPairings(), 4)
-
-
-class PersistentLoopCounter:
-    """
-    Counts from zero to bound -1, then restarts at zero.
-    Stores the current count in a text file. When it starts,
-    it looks for that file and reads it as the current count
-    if it exists, and initializes a new zeroed file if it doesn't
-    exist.
-    """
-    def __init__(self, file_name_stem, bound):
-        self.file_path = Path(file_name_stem + "_count.txt")
-        self.bound = bound
-        if self.file_path.exists():
-            self.__count = eval(self.file_path.read_text().strip())
-        else:
-            self.__count = 0
-            self.file_path.write_text(f"{self.__count}")
-        assert self.__count >= 0
-
-    def count(self):
-        return self.__count
-
-    def next(self):
-        if self.__count == self.bound - 1:
-            self.__count = 0
-        else:
-            self.__count += 1
-        assert self.__count >= 0
-        self.file_path.write_text(f"{self.__count}")
-        return self.__count
-
-    @staticmethod
-    def delete(file_name_stem):
-        counter_file = Path(file_name_stem + "_count.txt")
-        if counter_file.exists():
-            counter_file.unlink()

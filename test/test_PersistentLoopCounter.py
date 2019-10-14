@@ -2,7 +2,7 @@ import sys
 import pytest
 from pathlib import Path
 sys.path.append('..')
-from pairings import PersistentLoopCounter
+from PersistentLoopCounter import PersistentLoopCounter
 
 base = "LoopCounter"
 counter_path = Path(base + "_count.txt")

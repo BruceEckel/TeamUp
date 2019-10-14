@@ -1,4 +1,4 @@
-page = '''
+html_page = '''
 <html><head>
 <title>Pair-up tool</title>
 <script language="javascript">
@@ -34,7 +34,7 @@ function cycleColors() {
 x = 0
 for(i = 1; i <= numPairs; i++) {
   document.write("<TR id=hot" + i + "><TD><b><font size='+2'>" +  people[x++] +
-    "</font></b></TD><TD><b><font size='+2'>" + people[x++] + "</font></b></TD></TR>")
+    "</font></b></TD></TR>")
 }
 </script>
 </TABLE></body></html>
