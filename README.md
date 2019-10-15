@@ -3,6 +3,8 @@
 
 > A tool for pairing people during a workshop or seminar, so everyone eventually works with everyone.
 
+To eliminate that terrible moment when the workshop leader says "find a partner."
+
 ## Install
 
 1. Clone this project or download and unpack the zip file.
