@@ -16,7 +16,7 @@ setup(
     author_email='mindviewinc@gmail.com',
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -38,6 +38,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/BruceEckel/teamup',
-    version='0.1.0',
+    version='1.0.0',
     zip_safe=False,
 )
