@@ -44,14 +44,14 @@ class Pairings:
         return Pairings(People.from_file(filepath))
 
     def create_html_files(self):
-        build = Path() / "build"
-        if not build.exists():
-            build.mkdir()
+        html = Path() / "html"
+        if not html.exists():
+            html.mkdir()
         for n, pairing in enumerate([self.all[n] for n in self.sequence]):
-            html_file = build / (f"pairing{n}.html")
+            html_file = html / (f"pairing{n}.html")
             print(html_file)
             # Strip outer brackets of array to fit in Javascript Array() constructor:
-            html_file.write_text(html_page % (('%s' % pairing.teams)[1:-1], len(pairing.teams)))
+            html_file.write_text(html_page % (n, ('%s' % pairing.teams)[1:-1], len(pairing.teams)))
 
     @staticmethod
     def divideList(seq, num):

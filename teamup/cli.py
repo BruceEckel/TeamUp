@@ -10,7 +10,7 @@ from teamup.pairings import Pairings
 from teamup.PersistentLoopCounter import PersistentLoopCounter
 
 attendees = Path("Attendees.txt")
-build = Path() / "build"
+html = Path() / "html"
 
 @click.group()
 @click.version_option()
@@ -18,11 +18,11 @@ def main():
     """
     Generates and displays all combinations of 2-person teams using a
     round-robin algorithm. Requires an Attendees.txt file containing
-    one name per line. Remove the 'build' directory to restart.
+    one name per line. Remove the 'html' directory to restart.
     """
 
 def display(index):
-    pairing = build / f"pairing{index}.html"
+    pairing = html / f"pairing{index}.html"
     assert pairing.exists()
     webbrowser.open_new_tab(pairing)
 
@@ -36,10 +36,10 @@ def current():
         print("Attendees.txt not found")
         sys.exit(1)
     pairings = Pairings.from_file(Path("Attendees.txt"))
-    if not build.exists():
+    if not html.exists():
         pairings.create_html_files()
-        PersistentLoopCounter.create(build, pairings.bound)
-    display(PersistentLoopCounter.get(build).index())
+        PersistentLoopCounter.create(html, pairings.bound)
+    display(PersistentLoopCounter.get(html).index())
 
 
 @main.command()
@@ -47,19 +47,19 @@ def next():
     """
     Moves to next team grouping and shows
     """
-    if not build.exists():
-        print("No 'build' directory, first run 'teamup current'")
+    if not html.exists():
+        print("No 'html' directory, first run 'teamup current'")
         sys.exit(1)
-    display(PersistentLoopCounter.get(build).next())
+    display(PersistentLoopCounter.get(html).next())
 
 
 # @main.command()
 # def clean():
 #     """
-#     Erases the 'build' directory
+#     Erases the 'html' directory
 #     """
-#     if build.exists():
-#         build.unlink()
+#     if html.exists():
+#         html.unlink()
 
 
 if __name__ == '__main__':
