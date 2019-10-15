@@ -5,11 +5,13 @@
 
 
 class Person:
-
     @staticmethod
     def sanitize(unclean):
         def san(nm):
-            return " ".join([part.strip().title().replace(",", "") for part in nm.split()])
+            return " ".join(
+                [part.strip().title().replace(",", "") for part in nm.split()]
+            )
+
         first, last = unclean.rsplit(" ", 1)
         return san(first) + " " + san(last)
 

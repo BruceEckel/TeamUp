@@ -30,10 +30,13 @@ class Pairings:
         assert n >= 0 and n < self.bound
         return self.all[self.sequence[n]]
 
-    def  __len__(self): return self.bound
+    def __len__(self):
+        return self.bound
 
     def json(self):
-        return json.dumps([self.all[n] for n in self.sequence], cls=PairingEncoder, indent=2)
+        return json.dumps(
+            [self.all[n] for n in self.sequence], cls=PairingEncoder, indent=2
+        )
 
     @staticmethod
     def from_list(lst):
@@ -51,7 +54,9 @@ class Pairings:
             html_file = html / (f"pairing{n}.html")
             print(html_file)
             # Strip outer brackets of array to fit in Javascript Array() constructor:
-            html_file.write_text(html_page % (n, ('%s' % pairing.teams)[1:-1], len(pairing.teams)))
+            html_file.write_text(
+                html_page % (n, ("%s" % pairing.teams)[1:-1], len(pairing.teams))
+            )
 
     @staticmethod
     def divideList(seq, num):
@@ -59,7 +64,6 @@ class Pairings:
         result = []
         last = 0.0
         while last < len(seq):
-            result.append(seq[int(last):int(last + avg)])
+            result.append(seq[int(last) : int(last + avg)])
             last += avg
         return result
-

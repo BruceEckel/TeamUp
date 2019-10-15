@@ -10,7 +10,6 @@ plc_name = "PersistentLoopCounter.txt"
 
 
 class PLC:
-
     def __update(self):
         assert self.__count >= 0
         assert self.__count < self.__bound
@@ -36,19 +35,16 @@ class PLC:
 
 
 class PersistentLoopCounter:
-
     @staticmethod
     def create(path: Path, bound: int):
         counter_file = path / plc_name
         assert not counter_file.exists(), f"{counter_file} already exists"
         return PLC(0, bound, counter_file)
 
-
     @staticmethod
     def exists(path: Path):
         counter_file = path / plc_name
         return counter_file.exists()
-
 
     @staticmethod
     def get(path: Path):

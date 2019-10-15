@@ -11,13 +11,14 @@ from teamup.People import People
 
 
 class Pairing:
-
     def __init__(self, pairing_number: int, people: People):
         assert pairing_number >= 0
         assert len(people) >= 3
         rr = round_robin(len(people))
         self.pairing_number_bound = len(rr)
-        assert pairing_number < self.pairing_number_bound, f"pairing_number must be < {self.pairing_number_bound}"
+        assert (
+            pairing_number < self.pairing_number_bound
+        ), f"pairing_number must be < {self.pairing_number_bound}"
         self.pairing_number = pairing_number
         self.people = people
         self.groups = rr[self.pairing_number]

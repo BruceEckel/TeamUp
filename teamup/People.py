@@ -6,9 +6,8 @@ from teamup.Person import Person
 
 
 class People:
-
     def __init__(self):
-        self.all : List[Person] = []
+        self.all: List[Person] = []
 
     def __len__(self):
         return len(self.all)

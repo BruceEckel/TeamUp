@@ -12,6 +12,7 @@ from teamup.PersistentLoopCounter import PersistentLoopCounter
 attendees = Path("Attendees.txt")
 html = Path() / "html"
 
+
 @click.group()
 @click.version_option()
 def main():
@@ -20,6 +21,7 @@ def main():
     round-robin algorithm. Requires an Attendees.txt file containing
     one name per line. Remove the 'html' directory to restart.
     """
+
 
 def display(index):
     pairing = html / f"pairing{index}.html"
@@ -62,5 +64,5 @@ def next():
 #         html.unlink()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
